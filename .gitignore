@@ -1,0 +1,12 @@
+﻿target/
+.gradle
+.idea/
+.idea
+.repository/
+*.class
+*.jar
+/out/
+lib
+/out.log
+/out.log.*
+/*.txt
