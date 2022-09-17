@@ -1,5 +1,4 @@
 package ya01;
-
 /**
  * B. Будильники
  * <p>
@@ -38,55 +37,60 @@ package ya01;
  * <p>
  * Вывод
  * 27
+ * <p>
+ * ML
+ * 1.815s
+ * 263.85Mb
+ * 16 tests
  **/
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
+import java.util.TreeSet;
 
-public class Yandex01n09 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("input.txt"));
-        String[] param = reader.readLine().split(" ");
-        ArrayList<Long> timers = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(reader.readLine(), " ");
-        while (tokenizer.hasMoreTokens()) {
-            long value = Long.parseLong(tokenizer.nextToken());
-            if (!timers.contains(value))
-                timers.add(value);
-        }
-        // Время срабатывания будильников.
-        final int timerDuration = Integer.parseInt(param[1]);
-        // Количество звонков до пробуждения
-        int awake_count = Integer.parseInt(param[2]);
+public class Yandex01n05_treeset02 {
+    public static void main(String[] args) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
+            TreeSet<Long> timers = new TreeSet<>();
+            String[] param = reader.readLine().split(" ");
 
-        // Обрабатываем звонки будильников.
-        long value = 0;
-        long value2;
-        while (awake_count-- > 0) {
-            value = Long.MAX_VALUE;
-            Iterator<Long> iterator = timers.iterator();
-            while (iterator.hasNext()) {
-                value2 = iterator.next();
-                if (value2 < value) value = value2;
+            if (param.length == 3) {
+                // Время срабатывания будильников.
+                final int timerDuration = Integer.parseInt(param[1]);
+                // Количество звонков до пробуждения
+                int awake_count = Integer.parseInt(param[2]);
+
+                // Количество будильников.
+                int timer_count = Integer.parseInt(param[0]);
+                long curr = 0;
+                char ch = ' ';
+                while (timer_count>0) {
+                    ch = (char) reader.read();
+
+                    if (Character.isDigit(ch)) {
+                        // Формируем время следующего будильника по цифрам.
+                        if (curr == 0) curr = Character.digit(ch, 10);
+                        else curr = curr * 10 + Character.digit(ch, 10);
+                    } else {
+                        // Сохраняем только уникальные таймеры.
+                        timers.add(curr);
+                        curr = 0;
+                        timer_count--;
+                    }
+                }
+                if (curr > 0) timers.add(curr);
+
+                // Обрабатываем звонки будильников.
+                while (awake_count-- > 1) {
+                    timers.add(timers.pollFirst() + timerDuration);
+                }
+                long res = timers.first();
+                System.out.println(res);
             }
-            timers.remove(Long.valueOf(value));
-            value2 = value + timerDuration;
-            if (!timers.contains(value2))
-                timers.add(value2);
+        } catch (Exception e) {
         }
-
-        System.out.println(value);
     }
 }
 
-// = Arrays.stream(reader.readLine().split(" ")).mapToLong(a->Long.parseLong(a)).collect(()->new TreeSet<Long>(), TreeSet::add, TreeSet::addAll);
-//for(Long tm:timers) System.out.println(tm);
+//for (Long tm : timers) System.out.println(tm);
 //System.out.println();
-//Long value = Long.parseLong(tokenizer.nextToken());
-//if (!timers.contains(value))
-// Количество будильников.
-//int timer_count = Integer.parseInt(param[0]);
-//                for (Long tm : timers) System.out.println(tm);
-//                        System.out.println();

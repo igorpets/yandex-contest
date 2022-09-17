@@ -38,6 +38,11 @@ package ya01;
  * <p>
  * Вывод
  * 27
+ *
+ * TL
+ * 2.064s
+ * 36.67Mb
+ * test	13
  **/
 
 import java.io.BufferedReader;
@@ -45,22 +50,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class Yandex01n12 {
+public class Yandex01n05_arraylist03_sorted {
     public static void main(String[] args) throws IOException {
 
         try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
             String[] param = reader.readLine().split(" ");
-            // Количество будильников.
-            int timer_count = Integer.parseInt(param[0]);
-            long[] timers = new long[timer_count];
+            ArrayList<Long> timers = new ArrayList<>();
             StringTokenizer tokenizer = new StringTokenizer(reader.readLine(), " ");
-            int index = 0;
             while (tokenizer.hasMoreTokens()) {
-                long value = Long.MAX_VALUE - Long.parseLong(tokenizer.nextToken());
-                if (Arrays.binarySearch(timers, value) < 0)
-                    timers[index++] = value;
+                long value = Long.parseLong(tokenizer.nextToken());
+                if (!timers.contains(value))
+                    timers.add(value);
             }
-            Arrays.parallelSort(timers);
+            Collections.sort(timers, Collections.reverseOrder());
 
             // Время срабатывания будильников.
             final int timerDuration = Integer.parseInt(param[1]);
@@ -69,22 +71,18 @@ public class Yandex01n12 {
 
             // Обрабатываем звонки будильников.
             while (awake_count-- > 1) {
-                int index2 = timers.length - 1;
-                long value = timers[index2] - timerDuration;
-                if (Arrays.binarySearch(timers, value) < 0)
-                    timers[index2] = value;
-                else
-                    timers = Arrays.copyOf(timers, timers.length - 1);
-                Arrays.parallelSort(timers);
+                long value = timers.remove(timers.size() - 1) + timerDuration;
+                if (!timers.contains(value))
+                    timers.add(value);
+                Collections.sort(timers, Collections.reverseOrder());
             }
-            System.out.println(Long.MAX_VALUE - timers[timers.length - 1]);
+            System.out.println(timers.remove(timers.size() - 1));
         } catch (Exception e) {
 
         }
     }
 }
 
-//                for (long tm : timers) System.out.println(Long.MAX_VALUE - tm); System.out.println();
 // = Arrays.stream(reader.readLine().split(" ")).mapToLong(a->Long.parseLong(a)).collect(()->new TreeSet<Long>(), TreeSet::add, TreeSet::addAll);
 //for(Long tm:timers) System.out.println(tm);
 //System.out.println();
