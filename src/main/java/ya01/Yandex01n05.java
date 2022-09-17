@@ -50,8 +50,6 @@ public class Yandex01n05 {
             String[] param = reader.readLine().split(" ");
 
             if (param.length == 3) {
-                // Количество будильников.
-                //int timer_count = Integer.parseInt(param[0]);
                 // Время срабатывания будильников.
                 int timerDuration = Integer.parseInt(param[1]);
                 // Количество звонков до пробуждения
@@ -69,17 +67,12 @@ public class Yandex01n05 {
                 }
                 if (curr > 0) timers.add(curr);
 
-                //for (Long tm : timers) System.out.println(tm);
-                //System.out.println();
-
                 // Обрабатываем звонки будильников.
                 while (awake_count-- > 1) {
                     Long tm = Collections.min(timers);
                     timers.remove(tm);
                     tm = tm + timerDuration;
                     timers.add(tm);
-                    //for (Long tm : timers) System.out.println(tm);
-                    //System.out.println();
                 }
                 long res = Collections.min(timers);
                 System.out.println(res);
