@@ -43,7 +43,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
 
-public class Yandex01n02 {
+public class Yandex01n02_linkedlist {
     public static void main(String[] args) {
         class Timer {
             int number; // Порядковый номер будильника при первом запуске.

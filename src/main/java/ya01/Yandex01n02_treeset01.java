@@ -37,60 +37,45 @@ package ya01;
  * <p>
  * Вывод
  * 27
- * <p>
- * ML
- * 1.815s
- * 263.85Mb
- * 16 tests
  **/
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.TreeSet;
 
-public class Yandex01n05_treeset02 {
-    public static void main(String[] args) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
-            TreeSet<Long> timers = new TreeSet<>();
-            String[] param = reader.readLine().split(" ");
+public class Yandex01n02_treeset01 {
 
-            if (param.length == 3) {
-                // Время срабатывания будильников.
-                final int timerDuration = Integer.parseInt(param[1]);
-                // Количество звонков до пробуждения
-                int awake_count = Integer.parseInt(param[2]);
+    public static void main(String[] args) throws IOException {
+        String[] param;
+        char[] times;
+        BufferedReader reader = new BufferedReader(new FileReader("input.txt"));
+        TreeSet<Long> timers = new TreeSet<>();
+        param = reader.readLine().split(" ");
+        times = reader.readLine().toCharArray();
 
-                // Количество будильников.
-                int timer_count = Integer.parseInt(param[0]);
-                long curr = 0;
-                char ch = ' ';
-                while (timer_count>0) {
-                    ch = (char) reader.read();
-
-                    if (Character.isDigit(ch)) {
-                        // Формируем время следующего будильника по цифрам.
-                        if (curr == 0) curr = Character.digit(ch, 10);
-                        else curr = curr * 10 + Character.digit(ch, 10);
-                    } else {
-                        // Сохраняем только уникальные таймеры.
-                        timers.add(curr);
-                        curr = 0;
-                        timer_count--;
-                    }
+        if (param.length == 3) {
+            // Время срабатывания будильников.
+            int timerDuration = Integer.parseInt(param[1]);
+            // Количество звонков до пробуждения
+            int awake_count = Integer.parseInt(param[2]);
+            long curr = 0;
+            for (char ch : times) {
+                if (ch == ' ') {
+                    // Сохраняем только уникальные таймеры/
+                    timers.add(curr);
+                    curr = 0;
+                } else {
+                    // Формируем время следующего будильника по цифрам.
+                    curr = curr * 10 + Character.digit(ch, 10);
                 }
-                if (curr > 0) timers.add(curr);
-
-                // Обрабатываем звонки будильников.
-                while (awake_count-- > 1) {
-                    timers.add(timers.pollFirst() + timerDuration);
-                }
-                long res = timers.first();
-                System.out.println(res);
             }
-        } catch (Exception e) {
+            if (curr > 0) timers.add(curr);
+
+            // Обрабатываем звонки будильников.
+            while (awake_count-- > 1) {
+                timers.add(timers.pollFirst() + timerDuration);
+            }
+            long res = timers.first();
+            System.out.println(res);
         }
     }
 }
-
-//for (Long tm : timers) System.out.println(tm);
-//System.out.println();

@@ -23,60 +23,75 @@ package ya01;
  * <p>
  * Формат вывода
  * Выведите одно число — момент времени, когда Алексей проснётся.
- * <p>
+ *
  * Пример 1
- * Ввод
  * 6 5 10
  * 1 2 3 4 5 6
- * Вывод
  * 10
- * <p>
+ *
  * Пример 2
- * Ввод
  * 5 7 12
  * 5 22 17 13 8
- * <p>
- * Вывод
  * 27
  *
- * TL
- * 2.064s
- * 36.67Mb
- * test	13
+ * Пример 3
+ * 100 12312313 12323
+ * 100092 125 322 317 143 348 542 2422 417 2413 4248 2444 2 42 421 56 5678 836 2345 2309 1010092 1225 3222 3147 1543 3148 4542 21422 4417 24113 42848 24444 6 412 42 561 56178 846 26451 21309 1013092 1235 3322 3347 1643 3648 4642 26422 4617 24613 42648 24644 9 442 41 531 53178 836 23431 23339 1017092 1735 3722 3747 1743 3748 4742 27422 7617 27673 42748 24744 7 472 71 571 53778 736 27471 27379 1017992 9735 9722 3797 1793 3948 4992 29922 7917 29673 49748 24749 7 479 79 591 53979 796 29491 97979
+ * 1563663760
+ *
+ * TL 2.025s 29Mb test 16
  **/
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-public class Yandex01n05_arraylist03_sorted {
+public class Yandex01n02_arraylist01_nosorted02 {
     public static void main(String[] args) throws IOException {
-
         try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
             String[] param = reader.readLine().split(" ");
-            ArrayList<Long> timers = new ArrayList<>();
-            StringTokenizer tokenizer = new StringTokenizer(reader.readLine(), " ");
-            while (tokenizer.hasMoreTokens()) {
-                long value = Long.parseLong(tokenizer.nextToken());
-                if (!timers.contains(value))
-                    timers.add(value);
-            }
-            Collections.sort(timers, Collections.reverseOrder());
-
+            // Количество будильников.
+            int timer_count = Integer.parseInt(param[0]);
             // Время срабатывания будильников.
             final int timerDuration = Integer.parseInt(param[1]);
             // Количество звонков до пробуждения
             int awake_count = Integer.parseInt(param[2]);
+            long min = Long.MAX_VALUE;
+            int index = -1;
+            int curr = timer_count;
+
+            ArrayList<Long> timers = new ArrayList<>();
+            StringTokenizer tokenizer = new StringTokenizer(reader.readLine(), " ");
+            long next;
+            while (curr-- > 0) {
+                timers.add(next = Long.parseLong(tokenizer.nextToken()));
+                if (min > next) {
+                    min = next;
+                    index = timer_count - curr - 1;
+                }
+            }
+
+            // Первый будильник <min> сразу сработал.
+            timers.set(index, min + timerDuration);
+            awake_count--;
 
             // Обрабатываем звонки будильников.
-            while (awake_count-- > 1) {
-                long value = timers.remove(timers.size() - 1) + timerDuration;
-                if (!timers.contains(value))
-                    timers.add(value);
-                Collections.sort(timers, Collections.reverseOrder());
+            while (awake_count-- > 0) {
+                long value = Long.MAX_VALUE;
+                for (int i = 0; i < timers.size(); i++) {
+                    long new_value = timers.get(i);
+                    if (new_value < value && new_value > min) {
+                        value = new_value;
+                        index = i;
+                        if (new_value - 1 == min) break;
+                    }
+                }
+                min = value;
+                timers.set(index, value + timerDuration);
             }
-            System.out.println(timers.remove(timers.size() - 1));
+            System.out.println(min);
         } catch (Exception e) {
 
         }
