@@ -2,10 +2,10 @@ package ya01;
 
 import testdriver.TestDriver;
 
-public class YandexContestSearchBreakingComit_test extends TestDriver {
+public class YandexContestDownloadingResourcesInTheDataCenter_test extends TestDriver {
     public static void main(String[] args) {
-        TestDriver test = new YandexContestSearchBreakingComit_test();
-        test.className = "YandexContestSearchBreakingComit";
+        TestDriver test = new YandexContestDownloadingResourcesInTheDataCenter_test();
+        test.className = "YandexContestDownloadingResourcesInTheDataCenter";
 
         String[] test_data = {
                 "11 11\n" +
@@ -20,7 +20,7 @@ public class YandexContestSearchBreakingComit_test extends TestDriver {
         test.runtest(test_data, result_data, 0);
     }
     protected String work(){
-        YandexContestSearchBreakingComit.main(null);
-        return YandexContestSearchBreakingComit.result;
+        YandexContestDownloadingResourcesInTheDataCenter.main(null);
+        return YandexContestDownloadingResourcesInTheDataCenter.result;
     }
 }
