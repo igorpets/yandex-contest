@@ -32,7 +32,7 @@ import java.io.FileReader;
 import java.util.StringTokenizer;
 
 
-public class Yandex01n03 {
+public class YandexContestAnInterestingGame {
     private static final int THREE = 3; // Петя получает очко
     private static final int FIVE = 5; // Вася получает очко
     private static final String PETYA = "Petya";

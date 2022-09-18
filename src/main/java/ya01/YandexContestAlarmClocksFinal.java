@@ -107,7 +107,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
 
-public class Yandex01n02_arraylist01_nosorted03 {
+public class YandexContestAlarmClocksFinal {
+    public static String result = "";
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
             // Считываем основные параметры задачи.
@@ -178,18 +179,10 @@ public class Yandex01n02_arraylist01_nosorted03 {
                     else curr_timer = (curr_timer + timer_max) / 2;
                 }
             }
-            System.out.println(curr_timer);
+            result = String.valueOf(curr_timer);
+            System.out.println(result);
         } catch (Exception e) {
 
         }
     }
 }
-
-//System.out.println("NEW: " + new_value + " OLD: " + old_value + " group:" + new_group + " group_val: " + groups.get(new_group));
-//System.out.println("count:" + curr_count + " time:" + curr_timer + " min:" + timer_min + " max:" + timer_max +"\n");
-//System.out.println("TM:" + tm + " " + Math.max((curr_timer - tm) / timerDuration, 0));
-//System.out.println("min:" + timer_min + " max:" + timer_max);
-// = Arrays.stream(reader.readLine().split(" ")).mapToLong(a->Long.parseLong(a)).collect(()->new TreeSet<Long>(), TreeSet::add, TreeSet::addAll);
-//System.out.println("TIMERS:");
-//for(Long tm:timers) System.out.println(tm);
-//System.out.println();

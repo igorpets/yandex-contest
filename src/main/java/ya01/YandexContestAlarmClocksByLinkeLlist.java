@@ -37,60 +37,85 @@ package ya01;
  * <p>
  * Вывод
  * 27
- * <p>
- * ML
- * 1.815s
- * 263.85Mb
- * 16 tests
  **/
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.TreeSet;
+import java.util.*;
 
-public class Yandex01n02_treeset02 {
+public class YandexContestAlarmClocksByLinkeLlist {
     public static void main(String[] args) {
+        class Timer {
+            int number; // Порядковый номер будильника при первом запуске.
+            long startTime; // Время старта будильника.
+            long nextTime; // Точное время следующего звонка.
+
+            public Timer(int number, long startTime) {
+                this.number = number;
+                this.startTime = startTime;
+                this.nextTime = startTime;
+            }
+        }
+        String line;
         try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
-            TreeSet<Long> timers = new TreeSet<>();
+            LinkedList<Timer> timers = new LinkedList<>();
             String[] param = reader.readLine().split(" ");
+            String[] times = reader.readLine().split(" ");
 
             if (param.length == 3) {
+                // Количество будильников.
+                int timer_count = Integer.parseInt(param[0]);
                 // Время срабатывания будильников.
-                final int timerDuration = Integer.parseInt(param[1]);
+                int timerDuration = Integer.parseInt(param[1]);
                 // Количество звонков до пробуждения
                 int awake_count = Integer.parseInt(param[2]);
 
-                // Количество будильников.
-                int timer_count = Integer.parseInt(param[0]);
-                long curr = 0;
-                char ch = ' ';
-                while (timer_count>0) {
-                    ch = (char) reader.read();
-
-                    if (Character.isDigit(ch)) {
-                        // Формируем время следующего будильника по цифрам.
-                        if (curr == 0) curr = Character.digit(ch, 10);
-                        else curr = curr * 10 + Character.digit(ch, 10);
-                    } else {
-                        // Сохраняем только уникальные таймеры.
-                        timers.add(curr);
-                        curr = 0;
-                        timer_count--;
+                if (times.length == timer_count) {
+                    TreeSet<Long> set_of_times = new TreeSet<>();
+                    int num = 1;
+                    // Определим только уникальные таймеры.
+                    for (String time : times) {
+                        set_of_times.add(Long.parseLong(time));
                     }
-                }
-                if (curr > 0) timers.add(curr);
+                    // Создадим объекты-будильники.
+                    for(Long time: set_of_times) {
+                        timers.add(new Timer(num++, time));
+                    }
+                    timers.sort(new Comparator<Timer>() {
+                        @Override
+                        public int compare(Timer o1, Timer o2) {
+                            long res = o1.nextTime - o2.nextTime;
+                            if (res>0) return 1;
+                            else if (res<0) return -1;
+                            return 0;
+                        }
+                    });
 
-                // Обрабатываем звонки будильников.
-                while (awake_count-- > 1) {
-                    timers.add(timers.pollFirst() + timerDuration);
+                    // Обрабатываем звонки будильников.
+                    Timer current;
+                    while (awake_count-- > 1) {
+                        current = timers.removeFirst();
+                        current.nextTime += timerDuration;
+                        int new_index = 0;
+                        for (Timer timer : timers) {
+                            if (timer.nextTime == current.nextTime) {
+                                // Время совпало с существующим будильником, удаляем его навсегда.
+                                current = null;
+                                break;
+                            } else if (current.nextTime < timer.nextTime) {
+                                // Нашли место для вставки.
+                                break;
+                            }
+                            new_index++;
+                        }
+                        if (current != null)
+                            timers.add(new_index, current);
+                    }
+                    long res = timers.getFirst().nextTime;
+                    System.out.println(res);
                 }
-                long res = timers.first();
-                System.out.println(res);
             }
         } catch (Exception e) {
         }
     }
 }
-
-//for (Long tm : timers) System.out.println(tm);
-//System.out.println();
