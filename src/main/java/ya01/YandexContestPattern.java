@@ -22,7 +22,8 @@ public class YandexContestPattern {
 
             StringTokenizer tokenizer = new StringTokenizer(reader.readLine(), " ");
             while (tokenizer.hasMoreTokens()) {
-                int next = Integer.parseInt(tokenizer.nextToken());
+                String next = tokenizer.nextToken();
+                result = next;
             }
             System.out.println(result);
         } catch (Exception e) {
