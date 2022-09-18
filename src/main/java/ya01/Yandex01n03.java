@@ -1,10 +1,5 @@
 package ya01;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
 /**
  * Петя и Вася играют в интересную игру. Сначала Вася объявляет, сколько очков нужно набрать, чтобы игра закончилась.
  * Затем Петя берет карточки, на которых написаны целые неотрицательные числа, и начинает выкладывать их на стол
@@ -24,15 +19,20 @@ import java.util.StringTokenizer;
  * -
  * Формат ввода
  * В первой строке через пробел даны два целых положительных числа: количество очков K, которое объявляет в начале
- * игры Вася, и количество карточек N, которые есть у Пети (1≤K≤1000,1≤N≤10^6). В следующей строке даны N целых
- * неотрицательных чисел, разделенных пробелом, каждое из которых не превосходит 1000.
+ * игры Вася, и количество карточек N, которые есть у Пети (1≤K≤1000,1≤N≤10^6).
+ * В следующей строке даны N целых неотрицательных чисел, разделенных пробелом, каждое из которых не превосходит 1000.
  * -
  * Формат вывода
  * В единственной строке выведите Petya, если в игре побеждает Петя, Vasya, если в игре побеждает Вася,
  * или Draw, если победителя выявить не удалось.
  */
 
-public class Yandex01n03_first {
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.StringTokenizer;
+
+
+public class Yandex01n03 {
     private static final int THREE = 3; // Петя получает очко
     private static final int FIVE = 5; // Вася получает очко
     private static final String PETYA = "Petya";
@@ -61,6 +61,7 @@ public class Yandex01n03_first {
                 } else if (flag5 && !flag3) {
                     points_vasya++;
                 }
+                //System.out.println(next+" " + points_petya + " " + points_vasya);
                 if (points_petya == points_count || points_vasya == points_count) break;
             }
             if (points_petya == points_count)
