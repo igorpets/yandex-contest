@@ -80,9 +80,11 @@ public class YandexContestDownloadingResourcesInTheDataCenter {
                         servers.add(link1);
                 }
             }
-            for (HashMap.Entry<Integer, ArrayList<Integer>> entry : links.entrySet())
-                System.out.println(entry.getKey() + " " + entry.getValue());
-
+            for (HashMap.Entry<Integer, ArrayList<Integer>> entry : links.entrySet()) {
+                int key = entry.getKey();
+                ArrayList<Integer> arr = entry.getValue();
+                System.out.println(key + " " + arr);
+            }
             // Число файлов.
             int files_count = Integer.parseInt(reader.readLine());
             System.out.println();
