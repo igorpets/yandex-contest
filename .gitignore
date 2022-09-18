@@ -10,3 +10,4 @@ lib
 /out.log
 /out.log.*
 /*.txt
+/build/
