@@ -36,19 +36,16 @@ package ya01;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.*;
 
 
-public class YandexContestDownloadingResourcesInTheDataCenter {
+public class YandexContestDownloadingResourcesInTheDataCenterByTreeSet {
     public static String result = "no_data";
 
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(new FileReader("input.txt"))) {
-            HashMap<Integer, ArrayList<Integer>> links = new HashMap<>();
+            ArrayList<TreeSet<Integer>> clusters = new ArrayList<>();
+            TreeSet<Integer> servers;
             // Число связей между серверами.
             String str = reader.readLine();
             int links_count = Integer.parseInt(str);
@@ -57,44 +54,43 @@ public class YandexContestDownloadingResourcesInTheDataCenter {
             // Считываем все связи серверов (кластера).
             while (curr_link++ < links_count) {
                 String[] link = reader.readLine().split(" ");
-                int link1 = Integer.parseInt(link[0]);
-                int link2 = Integer.parseInt(link[1]);
+                Integer link1 = Integer.parseInt(link[0]);
+                Integer link2 = Integer.parseInt(link[1]);
+                int index1 = -1;
+                int index2 = -1;
                 //System.out.println("L " + link1 + " " + link2);
-                // Добавляем в общий список подключений прямую связь.
-                ArrayList<Integer> servers = links.get(link1);
-                if (servers == null) {
-                    servers = new ArrayList<>();
-                    servers.add(link2);
-                    links.put(link1, servers);
-                } else {
-                    if (!servers.contains(link2))
-                        servers.add(link2);
+                // Проверяем все записи.
+                for (int i = 0; i < clusters.size(); i++) {
+                    servers = clusters.get(i);
+                    if (servers.contains(link1)) index1 = i;
+                    if (servers.contains(link2)) index2 = i;
+                    if (index1 >= 0 && index2 >= 0) break;
                 }
-                // Добавляем в общий список подключений обратную связь.
-                servers = links.get(link2);
-                if (servers == null) {
-                    servers = new ArrayList<>();
+                if (index1 < 0 && index2 < 0) {
+                    // Добавляем новый кластер
+                    servers = new TreeSet<>();
                     servers.add(link1);
-                    links.put(link2, servers);
-                } else {
-                    if (!servers.contains(link1))
-                        servers.add(link1);
-                }
-            }
-            // Дополняем связи через другие сервера кластера.
-            for (HashMap.Entry<Integer, ArrayList<Integer>> entry : links.entrySet()) {
-                int key = entry.getKey();
-                ArrayList<Integer> arr = entry.getValue();
-                // Тестовая печать.
-                System.out.println(key + " " + arr);
-                for (Integer link_key:entry.getValue()) {
-                    for (HashMap.Entry<Integer, ArrayList<Integer>> entry2 : links.entrySet()) {
-                        int key2 = entry2.getKey();
-                        if (key2 != key && key == link_key) {
-                            //for (true) ;
-                        }
+                    servers.add(link2);
+                    clusters.add(servers);
+                } else if (index1 >= 0 && index2 < 0) {
+                    // Добавляем новый сервер link2 в существующий кластер
+                    clusters.get(index1).add(link2);
+                } else if (index2 >= 0 && index1 < 0) {
+                    // Добавляем новый сервер link1 в существующий кластер
+                    clusters.get(index2).add(link1);
+                } else if (index2 >= 0 && index1 >= 0 && index1 != index2) {
+                    // сервера в разных кластерах, объединяем кластера.
+                    TreeSet<Integer> cluster1 = clusters.get(index1);
+                    TreeSet<Integer> cluster2 = clusters.get(index2);
+                    if (cluster1.size() > cluster2.size()) {
+                        cluster1.addAll(cluster2);
+                        clusters.remove(index2);
+                    } else {
+                        cluster2.addAll(cluster1);
+                        clusters.remove(index1);
                     }
                 }
+                // Иначе, указанные сервера уже находятся в одном кластере.
             }
             // Число файлов.
             int files_count = Integer.parseInt(reader.readLine());
@@ -103,26 +99,38 @@ public class YandexContestDownloadingResourcesInTheDataCenter {
             result = "";
             while (curr_file_index++ < files_count) {
                 String[] file_data = reader.readLine().split(" ");
-                int target_server = Integer.parseInt(file_data[0]);
-                System.out.println("target_server=" + target_server);
+                Integer target_server = Integer.parseInt(file_data[0]);
+                //System.out.println("target_server=" + target_server);
                 //int source_count = Integer.parseInt(file_data[1]);
-                ArrayList<Integer> target_links = links.get(target_server);
-                String source_connected = "";
-                int source_connected_count = 0;
-
-                StringTokenizer tokenizer = new StringTokenizer(reader.readLine(), " ");
-                while (tokenizer.hasMoreTokens()) {
-                    int next_source = Integer.parseInt(tokenizer.nextToken());
-                    if (target_links.contains(next_source)) {
-                        source_connected_count++;
-                        source_connected = source_connected + next_source;
+                TreeSet<Integer> target_cluster = null;
+                for (TreeSet<Integer> cluster : clusters) {
+                    if (cluster.contains(target_server)) {
+                        // Нашли целевой кластер.
+                        target_cluster = cluster;
+                        break;
                     }
                 }
-                System.out.println("source_connected=" + source_connected);
+                String source_connected = "";
+                int source_connected_count = 0;
+                if (target_cluster != null) {
+                    StringTokenizer tokenizer = new StringTokenizer(reader.readLine(), " ");
+                    while (tokenizer.hasMoreTokens()) {
+                        int next_source = Integer.parseInt(tokenizer.nextToken());
+                        if (target_cluster.contains(next_source)) {
+                            source_connected_count++;
+                            if (source_connected_count == 1)
+                                source_connected = "" + next_source;
+                            else
+                                source_connected = source_connected + " " + next_source;
+                        }
+                    }
+                }
+                //System.out.println("source_connected=" + source_connected);
+                if (!result.equals("")) result = result + "\n";
                 if (source_connected_count > 0) {
-                    result = result + source_connected_count + " " + source_connected + "\n";
+                    result = result + source_connected_count + " " + source_connected;
                 } else
-                    result = result +"0 \n";
+                    result = result + "0";
             }
             System.out.println(result);
         } catch (Exception e) {
