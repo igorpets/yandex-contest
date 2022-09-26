@@ -36,6 +36,7 @@ package ya01;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -80,10 +81,20 @@ public class YandexContestDownloadingResourcesInTheDataCenter {
                         servers.add(link1);
                 }
             }
+            // Дополняем связи через другие сервера кластера.
             for (HashMap.Entry<Integer, ArrayList<Integer>> entry : links.entrySet()) {
                 int key = entry.getKey();
                 ArrayList<Integer> arr = entry.getValue();
+                // Тестовая печать.
                 System.out.println(key + " " + arr);
+                for (Integer link_key:entry.getValue()) {
+                    for (HashMap.Entry<Integer, ArrayList<Integer>> entry2 : links.entrySet()) {
+                        int key2 = entry2.getKey();
+                        if (key2 != key && key == link_key) {
+                            //for (true) ;
+                        }
+                    }
+                }
             }
             // Число файлов.
             int files_count = Integer.parseInt(reader.readLine());
